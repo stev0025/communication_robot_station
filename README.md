@@ -47,7 +47,27 @@ The system could handle following errors: incomplete packet & timeout.
 The design should able to easily new robots & stations.
 
 ## Communication Architecture
-TBD: high-level architecture of the system, including how robots and stations interact. I could give data flow diagram
+This architecture encompasses three key processes: (1) station discovery, (2) the handshake message exchange, and (3) the real-time messaging during sessions.
+### station discovery
+![station discovery](./station_discovery.JPG)
+1. Station regularly broadcast that it is available.
+2. When a robot receive a broadcast from an available station, the robot responds to that specific station, indicating its intent to charge.
+3. Once a station receives a response from a robot, it ceases its broadcast.
+
+
+### Handshake Message Exchange
+![handshake message exchange](./handskae_message.JPG)
+1. Initial Contact: The robot initiates the handshake by sending a 100-byte payload to the station.
+2. Station Acknowledgment (ACK): The station acknowledges the receipt of the robot's message by sending an ACK back to the robot.
+3. Robot Acknowledgment: In turn, the robot sends an ACK to the station, confirming the establishment of a communication session.
+4. Session Establishment: With this exchange of acknowledgments, a session is officially established, allowing the robot to proceed to the real-time messaging.
+
+### Real-time messaging during sessions
+![real time message](./real_time_message.JPG)
+1. Charging Status Inquiry: During the charging session, the robot sends a 50-byte payload to the station at regular intervals, inquiring whether charging is complete.
+2. Station Response with NACK: The station responds with a Negative Acknowledgment (NACK) if charging is still in progress, prompting the robot to enter a sleep state briefly.
+3. Repeat Process: The robot repeats this process, waking from sleep at specified intervals to send the inquiry again.
+4. Charging Completion: Once charging is complete, the station responds with an ACK, indicating that the robot can terminate the session and the station becomes available for other robots.
 
 ## Protocol Design
 TBD: communication protocol between robots and stations
