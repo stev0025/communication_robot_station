@@ -69,20 +69,5 @@ This architecture encompasses three key processes: (1) station discovery, (2) th
 3. Repeat Process: The robot repeats this process, waking from sleep at specified intervals to send the inquiry again.
 4. Charging Completion: Once charging is complete, the station responds with an ACK, indicating that the robot can terminate the session and the station becomes available for other robots.
 
-## Protocol Design
-TBD: communication protocol between robots and stations
-
 ## Data Structures
 TBD: data structure
-
-## Station Discovery Algorithm
-TBD: algo for robots to find unoccupied stations
-
-## Handshake and Communication Process
-TBD: process for establishing a session and exchanging messages.
-
-## Error Handling and Reliability
-TBD: error handling
-
-## Testing and Validation
-TBD: testing
