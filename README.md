@@ -13,3 +13,26 @@ The procedure steps are stated below.
 5. They must continuously exchange real-time messages (each with a payload of 50 bytes) at intervals of less than 100 ms until the session concludes.
 6. Robot finishes the session and the Station becomes available again.
 
+## System Requirements
+TBD: requirements and constraints of the system: communication standards, payload sizes, timing constraints, and hardware specifications.
+
+## Communication Architecture
+TBD: high-level architecture of the system, including how robots and stations interact. I could give data flow diagram
+
+## Protocol Design
+TBD: communication protocol between robots and stations
+
+## Data Structures
+TBD: data structure
+
+## Station Discovery Algorithm
+TBD: algo for robots to find unoccupied stations
+
+## Handshake and Communication Process
+TBD: process for establishing a session and exchanging messages.
+
+## Error Handling and Reliability
+TBD: error handling
+
+## Testing and Validation
+TBD: testing
