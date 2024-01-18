@@ -82,17 +82,23 @@ typedef struct {
 } StationBroadcast_s;
 ```
 #### Pseudo code
-```
+```c
 func discoverStation(robot) {
     StationBroadcast_s[] availableStations;
+
+    /* robot to listen broadcast availability */
     availableStations = listenStationBcast();
     if (availableStations == NULL) {
         return NO_STATION_FOUND
     }
+
+    /* find closest station */
     var closestStation = getClosestStation(availableStations);
 
     /* send ACK to closest station */
     sendAck(closestStation.stationID);
+
+    return;
 }
 ```
 
@@ -108,15 +114,17 @@ typedef struct {
 } HandshakeMessage_s;
 ```
 #### Pseudo code
-```
+```c
 function initiateHandshake(robotID, stationID) {
     HandshakeMessage_s handshakeMsg;
+
+    /* fill in handshake message */
     handshakeMsg.robotID = robotID;
     handshakeMsg.stationID = stationID;
     handshakeMsg.h_payload = payload_default;
     sendHandshakeMessage(handshakeMsg, stationID);
 
-    // Wait for ACK from the station
+    /* Wait for ACK from the station */
     var response = waitForResponse(stationID, HANDSHAKE_TIMEOUT)
     if (response == ACK) {
         sendACK(robotID); // Confirm the session from robot to station
@@ -137,7 +145,7 @@ typedef struct {
 } RealTimeMessage_s;
 ```
 #### Pseudo code
-```
+```c
 function exchangeRealTimeMessages(sessionID) {
     var chargingComplete = false;
 
