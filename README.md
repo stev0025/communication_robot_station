@@ -69,5 +69,42 @@ This architecture encompasses three key processes: (1) station discovery, (2) th
 3. Repeat Process: The robot repeats this process, waking from sleep at specified intervals to send the inquiry again.
 4. Charging Completion: Once charging is complete, the station responds with an ACK, indicating that the robot can terminate the session and the station becomes available for other robots.
 
-## Data Structures
-TBD: data structure
+## Data Structures f
+### Data Structure for Station Discovery
+Used by station (MCU B) to broadcast availability
+Used by robot (MCU A) to scan information
+```c
+typedef struct {
+    unsigned int stationID;  // Unique identifier for each station
+    bool isAvailable;        // Availability status of the station
+    // Additional fields can be added as needed (e.g., location, station's battery level)
+} StationBroadcast_s;
+```
+
+### Data Structure for Handshake Message
+Used by robot to initiate handshake process
+Used by station to acknowledge it
+```c
+typedef struct {
+    unsigned int robotID;    // Unique identifier for the robot
+    unsigned int stationID;  // ID of the station the robot is trying to connect to
+    char h_payload[100]; // Payload for the handshake, can include other necessary information
+} HandshakeMessage_s;
+```
+
+### Data Structure for Real-Time Messages
+Used by robot & station
+```c
+typedef struct {
+    unsigned int sessionID; // Identifier for the ongoing charging session
+    char r_payload[50]; // Payload for real-time communication, including a flag if charging is complete
+} RealTimeMessage_s;
+```
+
+### Data Structure for Acknowledgement Messages
+```c
+typedef enum {
+    ACK, // Acknowledgment
+    NACK // Negative Acknowledgment
+} Acknowledgment_s;
+```
