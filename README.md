@@ -143,11 +143,13 @@ function exchangeRealTimeMessages(sessionID) {
 
     while (!chargingComplete) {
         RealTimeMessage_s handshakeMsg;
+        var timeout_ms = 100;
+
         handshakeMsg.robotID = robotID;
         handshakeMsg.r_payload = payload_default;
         sendRealTimeMessage(realTimeMsg, sessionID)
 
-        response = waitForResponse(sessionID, REALTIME_MSG_TIMEOUT);
+        response = waitForResponse(sessionID, timeout_ms);
         if (response == ACK) {
             chargingComplete = true;
         } else if response is NACK {
