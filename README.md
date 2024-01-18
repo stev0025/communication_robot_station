@@ -54,7 +54,6 @@ This architecture encompasses three key processes: (1) station discovery, (2) th
 2. When a robot receive a broadcast from an available station, the robot responds to that specific station, indicating its intent to charge.
 3. Once a station receives a response from a robot, it ceases its broadcast.
 
-
 ### Handshake Message Exchange
 ![handshake message exchange](./handskae_message.JPG)
 1. Initial Contact: The robot initiates the handshake by sending a 100-byte payload to the station.
@@ -69,8 +68,9 @@ This architecture encompasses three key processes: (1) station discovery, (2) th
 3. Repeat Process: The robot repeats this process, waking from sleep at specified intervals to send the inquiry again.
 4. Charging Completion: Once charging is complete, the station responds with an ACK, indicating that the robot can terminate the session and the station becomes available for other robots.
 
-## Data Structures f
-### Data Structure for Station Discovery
+## Data Structures and Pseudo-code
+### Station Discovery
+#### Data Structure
 Used by station (MCU B) to broadcast availability
 Used by robot (MCU A) to scan information
 ```c
@@ -80,8 +80,23 @@ typedef struct {
     // Additional fields can be added as needed (e.g., location, station's battery level)
 } StationBroadcast_s;
 ```
+#### Pseudo code
+```
+func discoverStation(robot) {
+    StationBroadcast_s[] availableStations;
+    availableStations = listenStationBcast();
+    if (availableStations == NULL) {
+        return NO_STATION_FOUND
+    }
+    var closestStation = getClosestStation(availableStations);
 
-### Data Structure for Handshake Message
+    /* send ACK to closest station */
+    sendAck(closestStation.stationID);
+}
+```
+
+### Handshake Message
+#### Data Structure
 Used by robot to initiate handshake process
 Used by station to acknowledge it
 ```c
@@ -91,8 +106,28 @@ typedef struct {
     char h_payload[100]; // Payload for the handshake, can include other necessary information
 } HandshakeMessage_s;
 ```
+#### Pseudo code
+```
+function initiateHandshake(robotID, stationID) {
+    HandshakeMessage_s handshakeMsg;
+    handshakeMsg.robotID = robotID;
+    handshakeMsg.stationID = stationID;
+    handshakeMsg.h_payload = payload_default;
+    sendHandshakeMessage(handshakeMsg, stationID);
 
-### Data Structure for Real-Time Messages
+    // Wait for ACK from the station
+    var response = waitForResponse(stationID, HANDSHAKE_TIMEOUT)
+    if (response == ACK) {
+        sendACK(robotID); // Confirm the session from robot to station
+        return SESSION_ESTABLISHED;
+    } else {
+        return HANDSHAKE_FAILED;
+    }
+}
+```
+
+### Real-Time Messages
+#### Data Structure
 Used by robot & station
 ```c
 typedef struct {
@@ -100,11 +135,27 @@ typedef struct {
     char r_payload[50]; // Payload for real-time communication, including a flag if charging is complete
 } RealTimeMessage_s;
 ```
+#### Pseudo code
+```
+function exchangeRealTimeMessages(sessionID) {
+    var chargingComplete = false;
 
-### Data Structure for Acknowledgement Messages
-```c
-typedef enum {
-    ACK, // Acknowledgment
-    NACK // Negative Acknowledgment
-} Acknowledgment_s;
+    while (!chargingComplete) {
+        RealTimeMessage_s handshakeMsg;
+        handshakeMsg.robotID = robotID;
+        handshakeMsg.r_payload = payload_default;
+        sendRealTimeMessage(realTimeMsg, sessionID)
+
+        response = waitForResponse(sessionID, REALTIME_MSG_TIMEOUT);
+        if (response == ACK) {
+            chargingComplete = true;
+        } else if response is NACK {
+            sleep(REALTIME_INTERVAL);
+        } else {
+            handleCommunicationError() // error: Station doesn't reply
+        }
+    }
+
+    return CHARGING_COMPLETE
+}
 ```
