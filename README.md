@@ -28,8 +28,9 @@ Specific requirements and constraints that the communication system between the 
 Both robots and stations communicate via low-rate wireless personal area network (LR-WPAN) is a 802.15.4 Protocol.
 
 ### Data Exchange
-- Handshake Message: Initiate session between a robot and a station. A handshake message with a payload of 100 bytes.
-- Real-Time Messages: During the session, real-time messages with a payload of 50 bytes is exchanged.
+- Broadcast availability message: Station broadcast the availability for robot to pick-up
+- Handshake Message: Robot initiate session with a station. A handshake message with a payload of 100 bytes.
+- Real-Time Messages: During the session, robot sends real-time messages with a payload of 50 bytes.
 
 ### Timing Constraints
 The interval for real-time message exchange should not exceed 100 milliseconds.
